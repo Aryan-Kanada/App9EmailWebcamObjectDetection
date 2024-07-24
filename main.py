@@ -10,11 +10,14 @@ time.sleep(1)
 first_frame = None
 status_list = []
 count = 1
+no_object_start_time = None
 
 def clean_folder():
+    print("start cl")
     images = glob.glob("images/*.png")
     for image in images:
         os.remove(image)
+        print("end cle")
 
 while True:
     status = 0
@@ -56,6 +59,14 @@ while True:
 
         email_thread.start()
 
+        no_object_start_time = time.time()
+
+    if no_object_start_time:
+        if time.time() - no_object_start_time >= 20:
+            clean_thread.start()
+            break
+
+    print(status_list)
     cv2.imshow("My Video", frame)
     key = cv2.waitKey(1)
     if key == ord("q"):
